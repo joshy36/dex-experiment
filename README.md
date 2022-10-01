@@ -1,13 +1,7 @@
-# Sample Hardhat Project
+# DEX Experiment
 
-This project demonstrates a basic Hardhat use case. It comes with a sample contract, a test for that contract, and a script that deploys that contract.
+This project is a test to see if I can recreate a Uniswap V1 pool by only using the formalized documentation of a constant product market maker.
 
-Try running some of the following tasks:
+https://github.com/runtimeverification/verified-smart-contracts/blob/uniswap/uniswap/x-y-k.pdf
 
-```shell
-npx hardhat help
-npx hardhat test
-REPORT_GAS=true npx hardhat test
-npx hardhat node
-npx hardhat run scripts/deploy.ts
-```
+The first iteration of the contract will have no fees and liquidity will already be provided in the pool. The second iteration will allow users to diposit liquidity and earn trading fees from the pool from LP tokens.
