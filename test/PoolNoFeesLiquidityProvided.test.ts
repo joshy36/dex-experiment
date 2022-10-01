@@ -48,13 +48,53 @@ describe("PoolNoFeesLiquidityProvided Contract", function () {
     });
   });
 
-  describe("swapETHforERC20", function () {
+  describe("swapETHForERC20", function () {
     it("emits SwapCompleted", async function () {
-      expect(
-        await this.poolWithAccount.swapETHforERC20(
-          ethers.utils.parseEther("10000000000000000000")
-        )
-      ).emit(this.pool, "SwapCompleted");
+      const swapAmount = ethers.utils.parseEther("1");
+      const poolETHBalancePreSwap = await this.pool.getETHBalance();
+      const poolERC20BalancePreSwap = await this.pool.getERC20Balance();
+      const price = await this.pool.getETHSwapPrice(swapAmount);
+
+      await expect(
+        await this.poolWithAccount.swapETHForERC20({
+          value: swapAmount,
+        })
+      )
+        .emit(this.pool, "SwapETHCompleted")
+        .withArgs(this.account.address, swapAmount, price);
+
+      const poolETHBalancePostSwap = await this.pool.getETHBalance();
+      const poolERC20BalancePostSwap = await this.pool.getERC20Balance();
+
+      expect(poolETHBalancePreSwap).equal(
+        poolETHBalancePostSwap.sub(swapAmount)
+      );
+      expect(poolERC20BalancePreSwap).equal(
+        poolERC20BalancePostSwap.add(price)
+      );
+    });
+  });
+
+  describe("swapERC20ForETH", function () {
+    it("emits SwapCompleted", async function () {
+      const swapAmount = ethers.utils.parseEther("1");
+      const poolETHBalancePreSwap = await this.pool.getETHBalance();
+      const poolERC20BalancePreSwap = await this.pool.getERC20Balance();
+      const price = await this.pool.getERC20SwapPrice(swapAmount);
+
+      await this.ERC20.approve(this.pool.address, swapAmount);
+
+      await expect(await this.poolWithAccount.swapERC20ForETH(swapAmount))
+        .emit(this.pool, "SwapERC20Completed")
+        .withArgs(this.account.address, swapAmount, price);
+
+      const poolETHBalancePostSwap = await this.pool.getETHBalance();
+      const poolERC20BalancePostSwap = await this.pool.getERC20Balance();
+
+      expect(poolETHBalancePreSwap).equal(poolETHBalancePostSwap.add(price));
+      expect(poolERC20BalancePreSwap).equal(
+        poolERC20BalancePostSwap.sub(swapAmount)
+      );
     });
   });
 });

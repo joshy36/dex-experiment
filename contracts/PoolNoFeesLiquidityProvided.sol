@@ -8,7 +8,16 @@ import "hardhat/console.sol";
 /// @author joshy36
 /// @notice This contract is used to swap between ETH and an ERC20 token and vice versa
 contract PoolNoFeesLiquidityProvided {
-    event SwapCompleted();
+    event SwapETHCompleted(
+        address swapAddress,
+        uint256 amountDeposited,
+        uint256 amountRecieved
+    );
+    event SwapERC20Completed(
+        address swapAddress,
+        uint256 amountDeposited,
+        uint256 amountRecieved
+    );
 
     IERC20 public token;
 
@@ -21,16 +30,17 @@ contract PoolNoFeesLiquidityProvided {
                                  SWAP   
     //////////////////////////////////////////////////////////////*/
 
-    function swapETHforERC20(uint256 amount) public {
-        uint256 amountRecieved = _calculateETHSwap(amount);
+    function swapETHForERC20() public payable {
+        uint256 amountRecieved = _calculateETHSwap(msg.value);
         token.transfer(msg.sender, amountRecieved);
-        emit SwapCompleted();
+        emit SwapETHCompleted(msg.sender, msg.value, amountRecieved);
     }
 
-    function swapER20forETH(uint256 amount) public {
+    function swapERC20ForETH(uint256 amount) public payable {
         uint256 amountRecieved = _calculateERC20Swap(amount);
+        token.transferFrom(msg.sender, address(this), amount);
         payable(msg.sender).transfer(amountRecieved); // look into this more
-        emit SwapCompleted();
+        emit SwapERC20Completed(msg.sender, amount, amountRecieved);
     }
 
     /*//////////////////////////////////////////////////////////////
@@ -40,13 +50,9 @@ contract PoolNoFeesLiquidityProvided {
     function _calculateETHSwap(uint256 amount) private view returns (uint256) {
         uint256 ERC20Balance = getERC20Balance();
         uint256 ethBalance = getETHBalance();
-        console.log(ERC20Balance);
-        console.log(ethBalance);
-        console.log(amount);
-
         uint256 amountRecieved = ERC20Balance -
-            ((ethBalance * ERC20Balance) / (ethBalance + amount));
-        console.log(amountRecieved);
+            (((ethBalance - amount) * ERC20Balance) /
+                ((ethBalance - amount) + amount));
         return amountRecieved;
     }
 
@@ -55,15 +61,29 @@ contract PoolNoFeesLiquidityProvided {
         view
         returns (uint256)
     {
-        uint256 newBalance;
-        uint256 oldBalance = getETHBalance();
-        newBalance = ((1 - (amount / oldBalance)) * oldBalance);
-        return oldBalance - newBalance;
+        uint256 ERC20Balance = getERC20Balance();
+        uint256 ethBalance = getETHBalance();
+        uint256 amountRecieved = ethBalance -
+            ((ERC20Balance * ethBalance) / (ERC20Balance + amount));
+        return amountRecieved;
     }
 
     /*//////////////////////////////////////////////////////////////
                            GETTER FUNCTIONS
     //////////////////////////////////////////////////////////////*/
+
+    /// @dev Since the ETH is desposited into the contract pre swap we need different logic for the get and the actual swap
+    function getETHSwapPrice(uint256 amount) public view returns (uint256) {
+        uint256 ERC20Balance = getERC20Balance();
+        uint256 ethBalance = getETHBalance();
+        uint256 amountRecieved = ERC20Balance -
+            ((ethBalance * ERC20Balance) / (ethBalance + amount));
+        return amountRecieved;
+    }
+
+    function getERC20SwapPrice(uint256 amount) public view returns (uint256) {
+        return _calculateERC20Swap(amount);
+    }
 
     function getERC20Balance() public view returns (uint256) {
         return token.balanceOf(address(this));
