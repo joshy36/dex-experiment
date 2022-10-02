@@ -1,9 +1,5 @@
 name: "Test Check"
-on:
-  push:
-
-env:
-
+on: push
 jobs:
   build:
     name: check build
