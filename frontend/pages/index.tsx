@@ -6,6 +6,7 @@ import {
   useEnsAvatar,
   useEnsName,
 } from "wagmi";
+import Swap from "../components/Swap";
 
 const Home: NextPage = () => {
   const { address, connector, isConnected } = useAccount();
@@ -42,6 +43,8 @@ const Home: NextPage = () => {
       ))}
 
       {error && <div>{error.message}</div>}
+
+      <Swap></Swap>
     </div>
   );
 };
