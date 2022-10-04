@@ -6,7 +6,7 @@ import {
   useEnsAvatar,
   useEnsName,
 } from "wagmi";
-import Swap from "../components/Swap";
+import Faucet from "../components/Faucet";
 
 const Home: NextPage = () => {
   const { address, connector, isConnected } = useAccount();
@@ -23,7 +23,7 @@ const Home: NextPage = () => {
         <div>{ensName ? `${ensName} (${address})` : address}</div>
         <div>Connected to {connector!.name}</div>
         <button onClick={() => disconnect()}>Disconnect</button>
-        <Swap />
+        <Faucet />
       </div>
     );
   }
