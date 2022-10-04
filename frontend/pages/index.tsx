@@ -23,6 +23,7 @@ const Home: NextPage = () => {
         <div>{ensName ? `${ensName} (${address})` : address}</div>
         <div>Connected to {connector!.name}</div>
         <button onClick={() => disconnect()}>Disconnect</button>
+        <Swap />
       </div>
     );
   }
@@ -43,8 +44,6 @@ const Home: NextPage = () => {
       ))}
 
       {error && <div>{error.message}</div>}
-
-      <Swap></Swap>
     </div>
   );
 };
