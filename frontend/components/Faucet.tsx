@@ -28,6 +28,11 @@ export default function Faucet() {
 
   return (
     <div>
+      <h3>USDJ FAUCET</h3>
+      <div>
+        This faucet will send you 1000 USDJ if you want to swap to ETH or supply
+        liquidity to the pool (supplying liquidity not yet supported)
+      </div>
       <button onClick={() => write!()} disabled={!write || isLoading}>
         {isLoading ? "Sending..." : "Send Me USDJ"}
       </button>

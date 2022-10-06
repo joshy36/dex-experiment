@@ -50,9 +50,11 @@ const Home: NextPage = () => {
         </div>
 
         {/* <div style={{ textAlign: "right" }}>Connected to {connector?.name}</div> */}
-        <h1>Swap!</h1>
-        <Faucet />
+        <h1>Swap</h1>
         <Swap />
+        <br></br>
+        <br></br>
+        <Faucet />
       </div>
     );
   }
