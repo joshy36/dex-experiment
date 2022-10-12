@@ -55,6 +55,15 @@ const Home: NextPage = () => {
         <br></br>
         <br></br>
         <Faucet />
+
+        <p>Link to contract on goerli</p>
+        <a
+          href={`https://goerli.etherscan.io/address/0x904Cdbc42a3ECDA75A8547D785914a4862Aa42b9#code`}
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          here
+        </a>
       </div>
     );
   }

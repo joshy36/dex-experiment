@@ -1,8 +1,18 @@
+import { ethers } from "ethers";
 import * as React from "react";
 import { useContractRead } from "wagmi";
 
 export default function Swap() {
-  const [swap, setSwapAmount] = React.useState("");
+  const [swap, setSwapAmount] = React.useState("0");
+  const [rprice, setPrice] = React.useState("0");
+
+  let price = 0;
+  if (!swap) {
+    price = 0;
+  } else {
+    price = ethers.utils.parseEther(swap);
+  }
+
   const contractRead = useContractRead({
     addressOrName: "0x904Cdbc42a3ECDA75A8547D785914a4862Aa42b9",
     contractInterface: [
@@ -27,13 +37,15 @@ export default function Swap() {
       },
     ],
     functionName: "getERC20SwapPrice",
-    args: [10000000],
+    args: [price],
   });
-  console.log(contractRead.data);
+
+  console.log("swap", String(price));
+  console.log(Number(String(contractRead.data)) / 10e17);
   return (
     <div>
       <form>
-        <label htmlFor="Swap"></label>
+        <label htmlFor="Swap">ETH:</label>
         <input
           id="Swap"
           placeholder="0.0"
@@ -48,8 +60,13 @@ export default function Swap() {
         )}
       </form>
       <form>
-        <label htmlFor="Swap"></label>
-        <input id="Swap" placeholder="0.0" value={swap} disabled={true} />
+        <label htmlFor="Recieve">USDJ:</label>
+        <input
+          id="Recieve"
+          placeholder="0.0"
+          value={Number(String(contractRead.data)) / 10e17}
+          disabled={true}
+        />
       </form>
     </div>
   );
