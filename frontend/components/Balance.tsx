@@ -14,11 +14,11 @@ export default function Balance() {
 
   return (
     <div>
-      <div style={{ float: "right" }}>
+      <div style={{ float: "left" }}>
         Balance: {data?.formatted.substring(0, 5)} {data?.symbol}
       </div>
       <br></br>
-      <div style={{ float: "right" }}>
+      <div style={{ float: "left" }}>
         USDJ: {balance.data?.formatted.substring(0, 5)} {`USDJ`}
       </div>
     </div>

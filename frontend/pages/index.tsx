@@ -1,21 +1,26 @@
 import type { NextPage } from "next";
-import { useAccount, useDisconnect, useEnsName } from "wagmi";
+import { useAccount, useDisconnect, useNetwork, useSwitchNetwork } from "wagmi";
 import Faucet from "../components/Faucet";
 import Swap from "../components/Swap";
 import Connect from "../components/Connect";
 import Balance from "../components/Balance";
 import Address from "../components/Address";
+import Network from "../components/Network";
 
 const Home: NextPage = () => {
   const { isConnected } = useAccount();
   const { disconnect } = useDisconnect();
 
   return (
-    <div>
+    <body>
       {isConnected ? (
-        <button style={{ float: "right" }} onClick={() => disconnect()}>
-          Disconnect
-        </button>
+        <div>
+          <Balance></Balance>
+          <button style={{ float: "right" }} onClick={() => disconnect()}>
+            Disconnect
+          </button>
+          <Network></Network>
+        </div>
       ) : (
         <Connect></Connect>
       )}
@@ -23,7 +28,6 @@ const Home: NextPage = () => {
       {isConnected ? <Address></Address> : <></>}
       <br></br>
       <br></br>
-      {isConnected ? <Balance></Balance> : <></>}
 
       <h1
         style={{
@@ -47,7 +51,7 @@ const Home: NextPage = () => {
       <br></br>
       <Faucet />
 
-      <p>Link to contract on goerli</p>
+      <p>Link to pool contract on goerli</p>
       <a
         href={`https://goerli.etherscan.io/address/0x904Cdbc42a3ECDA75A8547D785914a4862Aa42b9#code`}
         target="_blank"
@@ -55,7 +59,7 @@ const Home: NextPage = () => {
       >
         here
       </a>
-    </div>
+    </body>
   );
 };
 
