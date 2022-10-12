@@ -1,15 +1,17 @@
 import type { NextPage } from "next";
-import { useAccount, useDisconnect, useNetwork, useSwitchNetwork } from "wagmi";
+import { useAccount, useDisconnect, useEnsName } from "wagmi";
 import Faucet from "../components/Faucet";
 import Swap from "../components/Swap";
 import Connect from "../components/Connect";
 import Balance from "../components/Balance";
-import Address from "../components/Address";
 import Network from "../components/Network";
 
 const Home: NextPage = () => {
   const { isConnected } = useAccount();
   const { disconnect } = useDisconnect();
+
+  const { address } = useAccount();
+  const { data: ensName } = useEnsName({ address });
 
   return (
     <body>
@@ -17,7 +19,12 @@ const Home: NextPage = () => {
         <div>
           <Balance></Balance>
           <button style={{ float: "right" }} onClick={() => disconnect()}>
-            Disconnect
+            {ensName
+              ? `${ensName} (${address})`
+              : `${address?.substring(0, 5)}...${address?.substring(
+                  address.length - 4,
+                  address.length
+                )}`}
           </button>
           <Network></Network>
         </div>
@@ -25,7 +32,6 @@ const Home: NextPage = () => {
         <Connect></Connect>
       )}
 
-      {isConnected ? <Address></Address> : <></>}
       <br></br>
       <br></br>
 
