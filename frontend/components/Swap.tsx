@@ -1,8 +1,9 @@
 import { BigNumber, ethers } from "ethers";
 import * as React from "react";
-import { useContractRead } from "wagmi";
+import { useAccount, useBalance, useContractRead } from "wagmi";
 
 export default function Swap() {
+  const { address, isConnected } = useAccount();
   const [swap, setSwapAmount] = React.useState("0");
 
   let price: number | BigNumber = 0;
@@ -11,6 +12,22 @@ export default function Swap() {
   } else {
     price = ethers.utils.parseEther(swap);
   }
+
+  const { data } = useBalance({
+    addressOrName: address,
+  });
+
+  const balance = useBalance({
+    addressOrName: address,
+    token: "0x1B66F72E2aD41Fab10EFa591A224f1f52C44D855",
+  });
+  const ethBalance = Number(data?.formatted);
+  const ethAmount = Number(Number(price) / 10e17);
+  console.log("balance", ethBalance);
+  console.log("amount", ethAmount);
+  //console.log("balance", Number(balance.data?.formatted));
+  const hasEnoughEth = ethBalance > ethAmount;
+  console.log(hasEnoughEth);
 
   const contractRead = useContractRead({
     addressOrName: "0x904Cdbc42a3ECDA75A8547D785914a4862Aa42b9",
@@ -39,8 +56,6 @@ export default function Swap() {
     args: [price],
   });
 
-  console.log("swap", String(price));
-  console.log(Number(String(contractRead.data)) / 10e17);
   return (
     <div>
       <form>
@@ -52,21 +67,25 @@ export default function Swap() {
           value={swap}
           onChange={(e) => setSwapAmount(e.target.value)}
         />
-        {isNaN(parseInt(swap)) || parseInt(swap) === 0 ? (
-          <button disabled={true}>Enter an amount</button>
-        ) : (
-          <button>Swap</button>
-        )}
       </form>
       <form>
         <label htmlFor="Recieve">USDJ:</label>
         <input
           id="Recieve"
           placeholder="0.0"
-          value={Number(String(contractRead.data)) / 10e17}
+          value={(Number(String(contractRead.data)) / 10e17) | 0}
           disabled={true}
         />
       </form>
+      {!isConnected ? (
+        <button disabled={true}>Connect Wallet</button>
+      ) : isNaN(parseInt(swap)) || parseInt(swap) === 0 ? (
+        <button disabled={true}>Enter an amount</button>
+      ) : hasEnoughEth ? (
+        <button>Swap</button>
+      ) : (
+        <button disabled={true}>Insufficient ETH Balance</button>
+      )}
     </div>
   );
 }

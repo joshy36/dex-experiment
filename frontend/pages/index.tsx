@@ -1,93 +1,60 @@
 import type { NextPage } from "next";
-import {
-  useAccount,
-  useBalance,
-  useConnect,
-  useDisconnect,
-  useEnsName,
-} from "wagmi";
+import { useAccount, useDisconnect, useEnsName } from "wagmi";
 import Faucet from "../components/Faucet";
 import Swap from "../components/Swap";
+import Connect from "../components/Connect";
+import Balance from "../components/Balance";
+import Address from "../components/Address";
 
 const Home: NextPage = () => {
-  const { address, connector, isConnected } = useAccount();
-  const { data: ensName } = useEnsName({ address });
-  const { connect, connectors, error, isLoading, pendingConnector } =
-    useConnect();
+  const { isConnected } = useAccount();
   const { disconnect } = useDisconnect();
 
-  const { data } = useBalance({
-    addressOrName: address,
-  });
-
-  const balance = useBalance({
-    addressOrName: address,
-    token: "0x1B66F72E2aD41Fab10EFa591A224f1f52C44D855",
-  });
-
-  if (isConnected) {
-    return (
-      <div>
+  return (
+    <div>
+      {isConnected ? (
         <button style={{ float: "right" }} onClick={() => disconnect()}>
           Disconnect
         </button>
-        <div style={{ float: "right" }}>
-          {ensName
-            ? `${ensName} (${address})`
-            : `${address?.substring(0, 5)}...${address?.substring(
-                address.length - 4,
-                address.length
-              )}`}
-        </div>
-        <br></br>
-        <br></br>
-        <div style={{ float: "right" }}>
-          Balance: {data?.formatted.substring(0, 5)} {data?.symbol}
-        </div>
-        <br></br>
-        <div style={{ float: "right" }}>
-          USDJ: {balance.data?.formatted.substring(0, 5)} {`USDJ`}
-        </div>
+      ) : (
+        <Connect></Connect>
+      )}
 
-        {/* <div style={{ textAlign: "right" }}>Connected to {connector?.name}</div> */}
-        <h1>Swap</h1>
+      {isConnected ? <Address></Address> : <></>}
+      <br></br>
+      <br></br>
+      {isConnected ? <Balance></Balance> : <></>}
+
+      <h1
+        style={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+      >
+        Swap
+      </h1>
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+      >
         <Swap />
-        <br></br>
-        <br></br>
-        <Faucet />
-
-        <p>Link to contract on goerli</p>
-        <a
-          href={`https://goerli.etherscan.io/address/0x904Cdbc42a3ECDA75A8547D785914a4862Aa42b9#code`}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          here
-        </a>
       </div>
-    );
-  }
-  return (
-    <div>
-      <h1>Welcome</h1>
-      <h2>Connect your wallet to swap</h2>
-      <div>
-        {connectors.map((connector: any) => (
-          <button
-            disabled={!connector.ready}
-            key={connector.id}
-            onClick={() => connect({ connector })}
-          >
-            {connector.name}
-            {!connector.ready && " (unsupported)"}
-            {isLoading &&
-              connector.id === pendingConnector?.id &&
-              " (connecting)"}
-          </button>
-        ))}
+      <br></br>
+      <br></br>
+      <Faucet />
 
-        {error && <div>{error.message}</div>}
-      </div>
+      <p>Link to contract on goerli</p>
+      <a
+        href={`https://goerli.etherscan.io/address/0x904Cdbc42a3ECDA75A8547D785914a4862Aa42b9#code`}
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        here
+      </a>
     </div>
   );
 };
