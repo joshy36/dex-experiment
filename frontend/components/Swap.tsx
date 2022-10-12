@@ -1,12 +1,11 @@
-import { ethers } from "ethers";
+import { BigNumber, ethers } from "ethers";
 import * as React from "react";
 import { useContractRead } from "wagmi";
 
 export default function Swap() {
   const [swap, setSwapAmount] = React.useState("0");
-  const [rprice, setPrice] = React.useState("0");
 
-  let price = 0;
+  let price: number | BigNumber = 0;
   if (!swap) {
     price = 0;
   } else {
@@ -17,7 +16,7 @@ export default function Swap() {
     addressOrName: "0x904Cdbc42a3ECDA75A8547D785914a4862Aa42b9",
     contractInterface: [
       {
-        name: "getERC20SwapPrice",
+        name: "getETHSwapPrice",
         type: "function",
         stateMutability: "view",
         inputs: [
@@ -36,7 +35,7 @@ export default function Swap() {
         ],
       },
     ],
-    functionName: "getERC20SwapPrice",
+    functionName: "getETHSwapPrice",
     args: [price],
   });
 
