@@ -11,7 +11,7 @@ import {
 } from "wagmi";
 import useDebounce from "../utils/debounce";
 
-const getBalance = (address: string): FetchBalanceResult | undefined => {
+const useGetBalance = (address: string): FetchBalanceResult | undefined => {
   const { data } = useBalance({
     addressOrName: address,
   });
@@ -29,7 +29,7 @@ export default function Swap() {
   } else {
     price = ethers.utils.parseEther(swap);
   }
-  const balanceEth = getBalance(String(address));
+  const balanceEth = useGetBalance(String(address));
 
   // const { data } = useBalance({
   //   addressOrName: address,
