@@ -10,6 +10,7 @@ import {
   useWaitForTransaction,
 } from "wagmi";
 import useDebounce from "../utils/debounce";
+import { useNetwork } from "wagmi";
 
 const useGetBalance = (address: string): FetchBalanceResult | undefined => {
   const { data } = useBalance({
@@ -22,6 +23,9 @@ export default function Swap() {
   const { address, isConnected } = useAccount();
   const [swap, setSwapAmount] = React.useState("0");
   const debouncedSwap = useDebounce(swap, 500);
+
+  const { chain } = useNetwork();
+  console.log("chain", chain);
 
   let price: number | BigNumber = 0;
   if (!swap) {
@@ -119,6 +123,8 @@ export default function Swap() {
         <button disabled={true}>Connect Wallet</button>
       ) : isNaN(parseFloat(swap)) || parseFloat(swap) === 0 ? (
         <button disabled={true}>Enter an amount</button>
+      ) : chain?.name != "Goerli" ? (
+        <button disabled={true}>Connect to Goerli to Swap</button>
       ) : hasEnoughEth ? (
         <button
           onClick={(e) => {
