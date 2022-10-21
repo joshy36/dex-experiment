@@ -55,6 +55,22 @@ const Home: NextPage = () => {
       </div>
       <br></br>
       <br></br>
+      <h2>Motivation</h2>
+      <p>
+        This project is a test to see if I can recreate a Uniswap V1 pool by
+        only using the formalized documentation of a constant product market
+        maker. The first iteration of the contract will have no fees and
+        liquidity will already be provided in the pool. The second iteration
+        will allow users to diposit liquidity and earn trading fees from the
+        pool from LP tokens.
+      </p>
+      <a
+        href={`https://github.com/runtimeverification/verified-smart-contracts/blob/uniswap/uniswap/x-y-k.pdf`}
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        Link to paper
+      </a>
       <Faucet />
 
       <p>Link to pool contract on goerli</p>
