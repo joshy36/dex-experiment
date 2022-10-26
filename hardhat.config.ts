@@ -5,6 +5,7 @@ dotenv.config();
 
 const PRIVATE_KEY = `${process.env.GOERLI_PRIVATE_KEY}`;
 const ALCHEMY_API_KEY = `${process.env.ALCHEMEY_API_KEY}`;
+const COINMARKETCAP_API_KEY = `${process.env.COINMARKETCAP_API_KEY}`;
 
 const config: HardhatUserConfig = {
   solidity: {
@@ -24,6 +25,13 @@ const config: HardhatUserConfig = {
       url: `https://eth-goerli.alchemyapi.io/v2/${ALCHEMY_API_KEY}`,
       accounts: [PRIVATE_KEY],
     },
+  },
+  gasReporter: {
+    enabled: true,
+    currency: "USD",
+    coinmarketcap: COINMARKETCAP_API_KEY,
+    gasPrice: 50,
+    showTimeSpent: true,
   },
 };
 

@@ -81,6 +81,14 @@ const Home: NextPage = () => {
       >
         here
       </a>
+      <p>Link to github</p>
+      <a
+        href={`https://github.com/joshy36/dex-experiment`}
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        here
+      </a>
     </body>
   );
 };
