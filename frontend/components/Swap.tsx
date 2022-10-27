@@ -25,7 +25,6 @@ export default function Swap() {
   const debouncedSwap = useDebounce(swap, 500);
 
   const { chain } = useNetwork();
-  console.log("chain", chain);
 
   let price: number | BigNumber = 0;
   if (!swap) {
@@ -47,6 +46,11 @@ export default function Swap() {
   const ethAmount = Number(Number(price) / 10e17);
   const hasEnoughEth = ethBalance > ethAmount;
 
+  let swapNoError = swap;
+  if (swap === "") {
+    swapNoError = "0";
+  }
+
   const { config } = usePrepareContractWrite({
     addressOrName: "0x904Cdbc42a3ECDA75A8547D785914a4862Aa42b9",
     contractInterface: [
@@ -62,7 +66,7 @@ export default function Swap() {
     enabled: Boolean(debouncedSwap),
     overrides: {
       from: address,
-      value: ethers.utils.parseEther(swap),
+      value: ethers.utils.parseEther(swapNoError),
     },
   });
   const { data, write } = useContractWrite(config);
