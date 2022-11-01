@@ -6,6 +6,11 @@ import Connect from "../components/Connect";
 import Balance from "../components/Balance";
 import Network from "../components/Network";
 import { ButtonStyled } from "../components/ButtonStyled";
+import GitHubIcon from "@mui/icons-material/GitHub";
+import LinkedInIcon from "@mui/icons-material/LinkedIn";
+import TwitterIcon from "@mui/icons-material/Twitter";
+import ArrowOutwardIcon from "@mui/icons-material/ArrowOutward";
+import { Link } from "@mui/material";
 
 const Home: NextPage = () => {
   const { isConnected } = useAccount();
@@ -75,25 +80,35 @@ const Home: NextPage = () => {
         rel="noopener noreferrer"
       >
         Link to paper
+        <ArrowOutwardIcon fontSize="small" />
       </a>
       <Faucet />
-
-      <p>Link to pool contract on goerli</p>
+      <br></br>
       <a
         href={`https://goerli.etherscan.io/address/0x904Cdbc42a3ECDA75A8547D785914a4862Aa42b9#code`}
         target="_blank"
         rel="noopener noreferrer"
       >
-        here
+        Link to pool contract on goerli
+        <ArrowOutwardIcon fontSize="small" />
       </a>
-      <p>Link to github</p>
-      <a
-        href={`https://github.com/joshy36/dex-experiment`}
-        target="_blank"
-        rel="noopener noreferrer"
-      >
-        here
-      </a>
+
+      <br></br>
+      <br></br>
+      <footer>
+        <Link
+          href={`https://github.com/joshy36/dex-experiment`}
+          target="_blank"
+        >
+          <GitHubIcon fontSize="large" />
+        </Link>
+        <Link href={`https://linkedin.com/in/joshy36`} target="_blank">
+          <LinkedInIcon fontSize="large" />
+        </Link>
+        <Link href={`https://twitter.com/JoshuaBender16`} target="_blank">
+          <TwitterIcon fontSize="large" />
+        </Link>
+      </footer>
     </body>
   );
 };

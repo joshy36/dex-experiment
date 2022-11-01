@@ -12,6 +12,8 @@ import {
 import useDebounce from "../utils/debounce";
 import { useNetwork } from "wagmi";
 import { ButtonStyled } from "./ButtonStyled";
+import { TextField } from "@mui/material";
+import DoubleArrowOutlinedIcon from "@mui/icons-material/DoubleArrowOutlined";
 
 const useGetBalance = (address: string): FetchBalanceResult | undefined => {
   const { data } = useBalance({
@@ -105,7 +107,7 @@ export default function Swap() {
 
   return (
     <div>
-      <form>
+      {/* <form>
         <label htmlFor="Swap">ETH:</label>
         <input
           id="Swap"
@@ -115,6 +117,7 @@ export default function Swap() {
           onChange={(e) => setSwapAmount(e.target.value)}
         />
       </form>
+
       <form>
         <label htmlFor="Recieve">USDJ:</label>
         <input
@@ -123,7 +126,32 @@ export default function Swap() {
           value={(Number(String(contractRead.data)) / 10e17) | 0}
           disabled={true}
         />
-      </form>
+      </form> */}
+      <TextField
+        sx={{
+          input: { color: "rgb(214, 213, 213)" },
+          "& .MuiFormLabel-root": {
+            color: "rgb(214, 213, 213)",
+          },
+        }}
+        id="outlined-basic"
+        label="ETH"
+        placeholder="0.0"
+        type="number"
+        variant="outlined"
+        value={swap}
+        onChange={(e) => setSwapAmount(e.target.value)}
+      />
+      <DoubleArrowOutlinedIcon />
+      <TextField
+        sx={{ input: { color: "rgb(214, 213, 213)" }, color: "red" }}
+        id="outlined-basic"
+        label="USDJ"
+        variant="outlined"
+        value={(Number(String(contractRead.data)) / 10e17) | 0}
+        disabled={true}
+      />
+      <br></br>
       {!isConnected ? (
         <ButtonStyled variant="contained" disabled={true}>
           Connect Wallet
