@@ -5,6 +5,7 @@ import Swap from "../components/Swap";
 import Connect from "../components/Connect";
 import Balance from "../components/Balance";
 import Network from "../components/Network";
+import { ButtonStyled } from "../components/ButtonStyled";
 
 const Home: NextPage = () => {
   const { isConnected } = useAccount();
@@ -18,14 +19,18 @@ const Home: NextPage = () => {
       {isConnected ? (
         <div>
           <Balance></Balance>
-          <button style={{ float: "right" }} onClick={() => disconnect()}>
+          <ButtonStyled
+            variant="contained"
+            style={{ float: "right" }}
+            onClick={() => disconnect()}
+          >
             {ensName
               ? `${ensName} (${address})`
               : `${address?.substring(0, 5)}...${address?.substring(
                   address.length - 4,
                   address.length
                 )}`}
-          </button>
+          </ButtonStyled>
           <Network></Network>
         </div>
       ) : (

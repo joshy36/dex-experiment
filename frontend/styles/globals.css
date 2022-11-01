@@ -24,7 +24,7 @@ a:hover {
     color-scheme: dark;
   }
   body {
-    color: white;
-    background: black;
+    color: rgb(214, 213, 213);
+    background: rgb(20, 20, 20);
   }
 }

@@ -1,4 +1,6 @@
+import { ButtonGroup } from "@mui/material";
 import { useNetwork, useSwitchNetwork } from "wagmi";
+import { ButtonStyled, ButtonGroupStyled } from "./ButtonStyled";
 
 export default function Network() {
   const { chain } = useNetwork();
@@ -15,18 +17,22 @@ export default function Network() {
         ) : (
           <div>Connected to {chain?.name}</div>
         )}
-
-        {chainsWanted.map((x) => (
-          <button
-            disabled={!switchNetwork || x.id === chain?.id}
-            key={x.id}
-            onClick={() => switchNetwork?.(x.id)}
-          >
-            {x.name}
-            {isLoading && pendingChainId === x.id && " (switching)"}
-          </button>
-        ))}
-
+        <ButtonGroupStyled
+          variant="contained"
+          aria-label="contained primary button group"
+        >
+          {chainsWanted.map((x) => (
+            <ButtonStyled
+              variant="contained"
+              disabled={!switchNetwork || x.id === chain?.id}
+              key={x.id}
+              onClick={() => switchNetwork?.(x.id)}
+            >
+              {x.name}
+              {isLoading && pendingChainId === x.id && " (switching)"}
+            </ButtonStyled>
+          ))}
+        </ButtonGroupStyled>
         <div>{error && error.message}</div>
       </>
     </div>

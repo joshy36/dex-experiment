@@ -3,7 +3,9 @@ import {
   usePrepareContractWrite,
   useContractWrite,
   useWaitForTransaction,
+  useNetwork,
 } from "wagmi";
+import { ButtonStyled } from "./ButtonStyled";
 
 export default function Faucet() {
   const { config } = usePrepareContractWrite({
@@ -22,6 +24,8 @@ export default function Faucet() {
   });
   const { data, write } = useContractWrite(config);
 
+  const { chain } = useNetwork();
+
   const { isLoading, isSuccess } = useWaitForTransaction({
     hash: data?.hash,
   });
@@ -33,9 +37,13 @@ export default function Faucet() {
         This faucet will send you 1000 USDJ if you want to swap to ETH or supply
         liquidity to the pool (supplying liquidity not yet supported)
       </div>
-      <button onClick={() => write!()} disabled={!write || isLoading}>
+      <ButtonStyled
+        variant="contained"
+        onClick={() => write!()}
+        disabled={!write || isLoading || chain?.name != "Goerli"}
+      >
         {isLoading ? "Sending..." : "Send Me USDJ"}
-      </button>
+      </ButtonStyled>
       {isSuccess && (
         <div>
           Successfully sent you 1,000 USDJ!

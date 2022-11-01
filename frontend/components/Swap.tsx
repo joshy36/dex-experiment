@@ -11,6 +11,7 @@ import {
 } from "wagmi";
 import useDebounce from "../utils/debounce";
 import { useNetwork } from "wagmi";
+import { ButtonStyled } from "./ButtonStyled";
 
 const useGetBalance = (address: string): FetchBalanceResult | undefined => {
   const { data } = useBalance({
@@ -124,13 +125,20 @@ export default function Swap() {
         />
       </form>
       {!isConnected ? (
-        <button disabled={true}>Connect Wallet</button>
+        <ButtonStyled variant="contained" disabled={true}>
+          Connect Wallet
+        </ButtonStyled>
       ) : isNaN(parseFloat(swap)) || parseFloat(swap) === 0 ? (
-        <button disabled={true}>Enter an amount</button>
+        <ButtonStyled variant="contained" disabled={true}>
+          Enter an amount
+        </ButtonStyled>
       ) : chain?.name != "Goerli" ? (
-        <button disabled={true}>Connect to Goerli to Swap</button>
+        <ButtonStyled variant="contained" disabled={true}>
+          Connect to Goerli to Swap
+        </ButtonStyled>
       ) : hasEnoughEth ? (
-        <button
+        <ButtonStyled
+          variant="contained"
           onClick={(e) => {
             e.preventDefault();
             write?.();
@@ -138,9 +146,11 @@ export default function Swap() {
           disabled={!write || isLoading}
         >
           {isLoading ? "Swapping..." : "Swap"}
-        </button>
+        </ButtonStyled>
       ) : (
-        <button disabled={true}>Insufficient ETH Balance</button>
+        <ButtonStyled variant="contained" disabled={true}>
+          Insufficient ETH Balance
+        </ButtonStyled>
       )}
       {isSuccess && (
         <div>
