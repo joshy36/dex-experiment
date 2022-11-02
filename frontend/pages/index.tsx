@@ -6,11 +6,8 @@ import Connect from "../components/Connect";
 import Balance from "../components/Balance";
 import Network from "../components/Network";
 import { ButtonStyled } from "../components/ButtonStyled";
-import GitHubIcon from "@mui/icons-material/GitHub";
-import LinkedInIcon from "@mui/icons-material/LinkedIn";
-import TwitterIcon from "@mui/icons-material/Twitter";
 import ArrowOutwardIcon from "@mui/icons-material/ArrowOutward";
-import { Link } from "@mui/material";
+import Footer from "../components/Footer";
 
 const Home: NextPage = () => {
   const { isConnected } = useAccount();
@@ -95,20 +92,7 @@ const Home: NextPage = () => {
 
       <br></br>
       <br></br>
-      <footer>
-        <Link
-          href={`https://github.com/joshy36/dex-experiment`}
-          target="_blank"
-        >
-          <GitHubIcon fontSize="large" />
-        </Link>
-        <Link href={`https://linkedin.com/in/joshy36`} target="_blank">
-          <LinkedInIcon fontSize="large" />
-        </Link>
-        <Link href={`https://twitter.com/JoshuaBender16`} target="_blank">
-          <TwitterIcon fontSize="large" />
-        </Link>
-      </footer>
+      <Footer></Footer>
     </body>
   );
 };
