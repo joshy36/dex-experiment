@@ -68,7 +68,7 @@ const Home: NextPage = () => {
         only using the formalized documentation of a constant product market
         maker. The first iteration of the contract will have no fees and
         liquidity will already be provided in the pool. The second iteration
-        will allow users to diposit liquidity and earn trading fees from the
+        will allow users to deposit liquidity and earn trading fees from the
         pool from LP tokens.
       </p>
       <a
