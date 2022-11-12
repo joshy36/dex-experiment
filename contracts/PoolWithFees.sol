@@ -24,9 +24,9 @@ contract PoolWithFees {
 
     // Initialize the pool to support an ERC20 token
     /// @dev fee should be the 10x the integer value of the percent. ie input 3 for 0.3% fee
-    constructor(IERC20 _token, uint256 _fee) {
-        token = _token;
-        fee = _fee;
+    constructor(IERC20 token_, uint256 fee_) {
+        token = token_;
+        fee = fee_;
     }
 
     /*//////////////////////////////////////////////////////////////
@@ -57,10 +57,8 @@ contract PoolWithFees {
         uint256 amountRecieved = ERC20Balance -
             (((ethBalance - amount) * ERC20Balance) /
                 ((ethBalance - amount) + amount));
-        uint256 feeSize = _calculateFee(amountRecieved);
+        uint256 feeSize = calculateFee(amountRecieved);
         uint256 amountRecievedWithFee = amountRecieved - feeSize;
-        console.log(amountRecieved);
-        console.log(amountRecievedWithFee);
         return amountRecievedWithFee;
     }
 
@@ -73,12 +71,12 @@ contract PoolWithFees {
         uint256 ethBalance = getETHBalance();
         uint256 amountRecieved = ethBalance -
             ((ERC20Balance * ethBalance) / (ERC20Balance + amount));
-        uint256 feeSize = _calculateFee(amountRecieved);
+        uint256 feeSize = calculateFee(amountRecieved);
         uint256 amountRecievedWithFee = amountRecieved - feeSize;
         return amountRecievedWithFee;
     }
 
-    function _calculateFee(uint256 amount) private view returns (uint256) {
+    function calculateFee(uint256 amount) public view returns (uint256) {
         uint256 swapWithFee = (amount * fee) / 1000;
         return swapWithFee;
     }
@@ -92,7 +90,7 @@ contract PoolWithFees {
         uint256 ethBalance = getETHBalance();
         uint256 amountRecieved = ERC20Balance -
             ((ethBalance * ERC20Balance) / (ethBalance + amount));
-        uint256 feeSize = _calculateFee(amountRecieved);
+        uint256 feeSize = calculateFee(amountRecieved);
         uint256 amountRecievedWithFee = amountRecieved - feeSize;
         return amountRecievedWithFee;
     }

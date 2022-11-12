@@ -16,9 +16,11 @@ describe("PoolWithFees Contract", function () {
 
     const contractFactory = await ethers.getContractFactory("PoolWithFees");
 
+    const fee = 3;
+
     this.pool = this.contract = await contractFactory.deploy(
       this.ERC20.address,
-      3
+      fee
     );
 
     this.poolWithAccount = await this.contract.connect(this.account);
