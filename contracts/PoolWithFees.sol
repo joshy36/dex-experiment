@@ -2,6 +2,7 @@
 pragma solidity ^0.8.0;
 
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
+import "hardhat/console.sol";
 
 /// @title A very simple DEX
 /// @author joshy36
@@ -19,10 +20,13 @@ contract PoolWithFees {
     );
 
     IERC20 public token;
+    uint256 public fee;
 
     // Initialize the pool to support an ERC20 token
-    constructor(IERC20 _token) {
+    /// @dev fee should be the 10x the integer value of the percent. ie input 3 for 0.3% fee
+    constructor(IERC20 _token, uint256 _fee) {
         token = _token;
+        fee = _fee;
     }
 
     /*//////////////////////////////////////////////////////////////
@@ -51,8 +55,13 @@ contract PoolWithFees {
         uint256 ERC20Balance = getERC20Balance();
         uint256 ethBalance = getETHBalance();
         uint256 amountRecieved = ERC20Balance -
-            (ERC20Balance / (1 + (amount / ethBalance)));
-        return amountRecieved;
+            (((ethBalance - amount) * ERC20Balance) /
+                ((ethBalance - amount) + amount));
+        uint256 feeSize = _calculateFee(amountRecieved);
+        uint256 amountRecievedWithFee = amountRecieved - feeSize;
+        console.log(amountRecieved);
+        console.log(amountRecievedWithFee);
+        return amountRecievedWithFee;
     }
 
     function _calculateERC20Swap(uint256 amount)
@@ -63,8 +72,15 @@ contract PoolWithFees {
         uint256 ERC20Balance = getERC20Balance();
         uint256 ethBalance = getETHBalance();
         uint256 amountRecieved = ethBalance -
-            (ethBalance / (1 + (amount / ERC20Balance)));
-        return amountRecieved;
+            ((ERC20Balance * ethBalance) / (ERC20Balance + amount));
+        uint256 feeSize = _calculateFee(amountRecieved);
+        uint256 amountRecievedWithFee = amountRecieved - feeSize;
+        return amountRecievedWithFee;
+    }
+
+    function _calculateFee(uint256 amount) private view returns (uint256) {
+        uint256 swapWithFee = (amount * fee) / 1000;
+        return swapWithFee;
     }
 
     /*//////////////////////////////////////////////////////////////
@@ -72,7 +88,13 @@ contract PoolWithFees {
     //////////////////////////////////////////////////////////////*/
 
     function getETHSwapPrice(uint256 amount) public view returns (uint256) {
-        return _calculateETHSwap(amount);
+        uint256 ERC20Balance = getERC20Balance();
+        uint256 ethBalance = getETHBalance();
+        uint256 amountRecieved = ERC20Balance -
+            ((ethBalance * ERC20Balance) / (ethBalance + amount));
+        uint256 feeSize = _calculateFee(amountRecieved);
+        uint256 amountRecievedWithFee = amountRecieved - feeSize;
+        return amountRecievedWithFee;
     }
 
     function getERC20SwapPrice(uint256 amount) public view returns (uint256) {
