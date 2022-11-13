@@ -102,23 +102,27 @@ describe("PoolWithFees Contract", function () {
   describe("fees", function () {
     it("accumulates fees over time", async function () {
       const swapAmount = ethers.utils.parseEther("1");
-      const poolETHBalancePreSwap = await this.pool.getETHBalance();
-      const poolERC20BalancePreSwap = await this.pool.getERC20Balance();
 
-      await this.ERC20.approve(this.pool.address, swapAmount.mul(500));
+      const ethFeesPreSwaps: number = await this.pool.ethFees();
+      const erc20FeesPreSwaps: number = await this.pool.erc20Fees();
 
-      for (let i = 0; i < 500; i++) {
+      expect(ethFeesPreSwaps).equal(0);
+      expect(erc20FeesPreSwaps).equal(0);
+
+      await this.ERC20.approve(this.pool.address, swapAmount.mul(100));
+
+      for (let i = 0; i < 100; i++) {
         await this.poolWithAccount.swapERC20ForETH(swapAmount);
         await this.poolWithAccount.swapETHForERC20({
           value: swapAmount,
         });
       }
 
-      const poolETHBalancePostSwap = await this.pool.getETHBalance();
-      const poolERC20BalancePostSwap = await this.pool.getERC20Balance();
+      const ethFeesPostSwaps: number = await this.pool.ethFees();
+      const erc20FeesPostSwaps: number = await this.pool.erc20Fees();
 
-      expect(poolETHBalancePreSwap).lessThan(poolETHBalancePostSwap);
-      expect(poolERC20BalancePreSwap).lessThan(poolERC20BalancePostSwap);
+      expect(ethFeesPreSwaps + 10e18 * 0.03).equal(ethFeesPostSwaps);
+      expect(erc20FeesPreSwaps + 10e18 * 0.03).equal(erc20FeesPostSwaps);
     });
   });
 });

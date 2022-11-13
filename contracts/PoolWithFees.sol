@@ -22,6 +22,9 @@ contract PoolWithFees {
     IERC20 public token;
     uint256 public fee;
 
+    uint256 public ethFees = 0;
+    uint256 public erc20Fees = 0;
+
     // Initialize the pool to support an ERC20 token
     /// @dev fee should be the 10x the integer value of the percent. ie input 3 for 0.3% fee
     constructor(IERC20 token_, uint256 fee_) {
@@ -36,6 +39,7 @@ contract PoolWithFees {
     function swapETHForERC20() public payable {
         uint256 amountRecieved = _calculateETHSwap(msg.value);
         token.transfer(msg.sender, amountRecieved);
+        ethFees += calculateFee(msg.value);
         emit SwapETHCompleted(msg.sender, msg.value, amountRecieved);
     }
 
@@ -44,6 +48,7 @@ contract PoolWithFees {
         token.transferFrom(msg.sender, address(this), amount);
         (bool success, ) = msg.sender.call{value: amountRecieved}("");
         require(success, "Transfer failed.");
+        erc20Fees += calculateFee(amount);
         emit SwapERC20Completed(msg.sender, amount, amountRecieved);
     }
 
