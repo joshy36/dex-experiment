@@ -98,4 +98,27 @@ describe("PoolWithFees Contract", function () {
       );
     });
   });
+
+  describe("fees", function () {
+    it("accumulates fees over time", async function () {
+      const swapAmount = ethers.utils.parseEther("1");
+      const poolETHBalancePreSwap = await this.pool.getETHBalance();
+      const poolERC20BalancePreSwap = await this.pool.getERC20Balance();
+
+      await this.ERC20.approve(this.pool.address, swapAmount.mul(500));
+
+      for (let i = 0; i < 500; i++) {
+        await this.poolWithAccount.swapERC20ForETH(swapAmount);
+        await this.poolWithAccount.swapETHForERC20({
+          value: swapAmount,
+        });
+      }
+
+      const poolETHBalancePostSwap = await this.pool.getETHBalance();
+      const poolERC20BalancePostSwap = await this.pool.getERC20Balance();
+
+      expect(poolETHBalancePreSwap).lessThan(poolETHBalancePostSwap);
+      expect(poolERC20BalancePreSwap).lessThan(poolERC20BalancePostSwap);
+    });
+  });
 });
