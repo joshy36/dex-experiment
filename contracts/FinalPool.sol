@@ -2,12 +2,11 @@
 pragma solidity ^0.8.0;
 
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
-import "hardhat/console.sol";
 
 /// @title A very simple DEX
 /// @author joshy36
-/// @notice This contract is used to swap between ETH and an ERC20 token and vice versa
-contract PoolWithFees {
+/// @notice This contract is used to swap between ETH and an ERC20 token and vice versa. It has fees on each swap but no way for LPs to supply liquidity yet.
+contract FinalPool {
     event SwapETHCompleted(
         address swapAddress,
         uint256 amountDeposited,

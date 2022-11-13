@@ -1,11 +1,18 @@
 import { ethers } from "hardhat";
 import { expect } from "chai";
 
-describe("PoolWithFees Contract", function () {
+describe("PoolWithFeesLiquidityProvided Contract", function () {
   beforeEach(async function () {
-    const [account, anotherAccount] = await ethers.getSigners();
+    const [account, anotherAccount, sendEth] = await ethers.getSigners();
     this.account = account;
     this.anotherAccount = anotherAccount;
+    this.sendEth = sendEth;
+
+    // make sure main account has enough eth when runnning all tests
+    await this.sendEth.sendTransaction({
+      to: this.account.address,
+      value: ethers.utils.parseEther("1000"),
+    });
 
     const ERC20Factory = await ethers.getContractFactory("SimpleERC20");
 
@@ -14,7 +21,9 @@ describe("PoolWithFees Contract", function () {
 
     await this.ERC20.deployed();
 
-    const contractFactory = await ethers.getContractFactory("PoolWithFees");
+    const contractFactory = await ethers.getContractFactory(
+      "PoolWithFeesLiquidityProvided"
+    );
 
     const fee = 3;
 
