@@ -5,7 +5,7 @@ import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 
 /// @title A very simple DEX
 /// @author joshy36
-/// @notice This contract is used to swap between ETH and an ERC20 token and vice versa. It has fees on each swap but no way for LPs to supply liquidity yet.
+/// @notice This contract is used to swap between ETH and an ERC20 token and vice versa. It has fees on each swap and users can supply liquidity.
 contract FinalPool {
     event SwapETHCompleted(
         address swapAddress,
@@ -18,6 +18,8 @@ contract FinalPool {
         uint256 amountRecieved
     );
 
+    error MustProvideEqualLiquidity();
+
     IERC20 public token;
     uint256 public fee;
 
@@ -25,7 +27,7 @@ contract FinalPool {
     uint256 public erc20Fees = 0;
 
     // Initialize the pool to support an ERC20 token
-    /// @dev fee should be the 10x the integer value of the percent. ie input 3 for 0.3% fee
+    /// @dev fee should be the 100x the integer value of the percent. ie input 30 for 0.3% fee
     constructor(IERC20 token_, uint256 fee_) {
         token = token_;
         fee = fee_;
@@ -81,8 +83,18 @@ contract FinalPool {
     }
 
     function calculateFee(uint256 amount) public view returns (uint256) {
-        uint256 swapWithFee = (amount * fee) / 1000;
+        uint256 swapWithFee = (amount * fee) / 10000;
         return swapWithFee;
+    }
+
+    /*//////////////////////////////////////////////////////////////
+                                LIQUIDITY
+    //////////////////////////////////////////////////////////////*/
+
+    function mintLiquidity(uint256 amount) public payable {
+        if (msg.value != amount) {
+            revert MustProvideEqualLiquidity();
+        }
     }
 
     /*//////////////////////////////////////////////////////////////

@@ -25,7 +25,7 @@ contract PoolWithFeesLiquidityProvided {
     uint256 public erc20Fees = 0;
 
     // Initialize the pool to support an ERC20 token
-    /// @dev fee should be the 10x the integer value of the percent. ie input 3 for 0.3% fee
+    /// @dev fee should be the 100x the integer value of the percent. ie input 30 for 0.3% fee
     constructor(IERC20 token_, uint256 fee_) {
         token = token_;
         fee = fee_;
@@ -81,7 +81,7 @@ contract PoolWithFeesLiquidityProvided {
     }
 
     function calculateFee(uint256 amount) public view returns (uint256) {
-        uint256 swapWithFee = (amount * fee) / 1000;
+        uint256 swapWithFee = (amount * fee) / 10000;
         return swapWithFee;
     }
 

@@ -16,7 +16,7 @@ describe("FinalPool", function () {
 
     const contractFactory = await ethers.getContractFactory("FinalPool");
 
-    const fee = 3;
+    const fee = 30;
 
     this.pool = this.contract = await contractFactory.deploy(
       this.ERC20.address,
