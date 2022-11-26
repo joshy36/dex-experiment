@@ -1,6 +1,6 @@
-import { FetchBalanceResult } from "@wagmi/core";
-import { BigNumber, ethers } from "ethers";
-import * as React from "react";
+import { FetchBalanceResult } from '@wagmi/core';
+import { BigNumber, ethers } from 'ethers';
+import * as React from 'react';
 import {
   useAccount,
   useBalance,
@@ -8,12 +8,12 @@ import {
   usePrepareContractWrite,
   useContractWrite,
   useWaitForTransaction,
-} from "wagmi";
-import useDebounce from "../utils/debounce";
-import { useNetwork } from "wagmi";
-import { ButtonStyled } from "./ButtonStyled";
-import { TextField } from "@mui/material";
-import DoubleArrowOutlinedIcon from "@mui/icons-material/DoubleArrowOutlined";
+} from 'wagmi';
+import useDebounce from '../utils/debounce';
+import { useNetwork } from 'wagmi';
+import { ButtonStyled } from './ButtonStyled';
+import { TextField } from '@mui/material';
+import DoubleArrowOutlinedIcon from '@mui/icons-material/DoubleArrowOutlined';
 
 const useGetBalance = (address: string): FetchBalanceResult | undefined => {
   const { data } = useBalance({
@@ -24,7 +24,7 @@ const useGetBalance = (address: string): FetchBalanceResult | undefined => {
 
 export default function Swap() {
   const { address, isConnected } = useAccount();
-  const [swap, setSwapAmount] = React.useState("0");
+  const [swap, setSwapAmount] = React.useState('0');
   const debouncedSwap = useDebounce(swap, 500);
 
   const { chain } = useNetwork();
@@ -43,29 +43,29 @@ export default function Swap() {
 
   const balance = useBalance({
     addressOrName: address,
-    token: "0x1B66F72E2aD41Fab10EFa591A224f1f52C44D855",
+    token: '0x1B66F72E2aD41Fab10EFa591A224f1f52C44D855',
   });
   const ethBalance = Number(balanceEth?.formatted);
   const ethAmount = Number(Number(price) / 10e17);
   const hasEnoughEth = ethBalance > ethAmount;
 
   let swapNoError = swap;
-  if (swap === "") {
-    swapNoError = "0";
+  if (swap === '') {
+    swapNoError = '0';
   }
 
   const { config } = usePrepareContractWrite({
-    addressOrName: "0x904Cdbc42a3ECDA75A8547D785914a4862Aa42b9",
+    addressOrName: '0x904Cdbc42a3ECDA75A8547D785914a4862Aa42b9',
     contractInterface: [
       {
         inputs: [],
-        name: "swapETHForERC20",
+        name: 'swapETHForERC20',
         outputs: [],
-        stateMutability: "payable",
-        type: "function",
+        stateMutability: 'payable',
+        type: 'function',
       },
     ],
-    functionName: "swapETHForERC20",
+    functionName: 'swapETHForERC20',
     enabled: Boolean(debouncedSwap),
     overrides: {
       from: address,
@@ -79,29 +79,29 @@ export default function Swap() {
   });
 
   const contractRead = useContractRead({
-    addressOrName: "0x904Cdbc42a3ECDA75A8547D785914a4862Aa42b9",
+    addressOrName: '0x904Cdbc42a3ECDA75A8547D785914a4862Aa42b9',
     contractInterface: [
       {
-        name: "getETHSwapPrice",
-        type: "function",
-        stateMutability: "view",
+        name: 'getETHSwapPrice',
+        type: 'function',
+        stateMutability: 'view',
         inputs: [
           {
-            internalType: "uint256",
-            name: "amount",
-            type: "uint256",
+            internalType: 'uint256',
+            name: 'amount',
+            type: 'uint256',
           },
         ],
         outputs: [
           {
-            internalType: "uint256",
-            name: "",
-            type: "uint256",
+            internalType: 'uint256',
+            name: '',
+            type: 'uint256',
           },
         ],
       },
     ],
-    functionName: "getETHSwapPrice",
+    functionName: 'getETHSwapPrice',
     args: [price],
   });
 
@@ -129,9 +129,9 @@ export default function Swap() {
       </form> */}
       <TextField
         sx={{
-          input: { color: "rgb(214, 213, 213)" },
-          "& .MuiFormLabel-root": {
-            color: "rgb(214, 213, 213)",
+          input: { color: 'rgb(214, 213, 213)' },
+          '& .MuiFormLabel-root': {
+            color: 'rgb(214, 213, 213)',
           },
         }}
         id="outlined-basic"
@@ -144,7 +144,7 @@ export default function Swap() {
       />
       <DoubleArrowOutlinedIcon />
       <TextField
-        sx={{ input: { color: "rgb(214, 213, 213)" }, color: "red" }}
+        sx={{ input: { color: 'rgb(214, 213, 213)' }, color: 'red' }}
         id="outlined-basic"
         label="USDJ"
         variant="outlined"
@@ -160,7 +160,7 @@ export default function Swap() {
         <ButtonStyled variant="contained" disabled={true}>
           Enter an amount
         </ButtonStyled>
-      ) : chain?.name != "Goerli" ? (
+      ) : chain?.name != 'Goerli' ? (
         <ButtonStyled variant="contained" disabled={true}>
           Connect to Goerli to Swap
         </ButtonStyled>
@@ -173,7 +173,7 @@ export default function Swap() {
           }}
           disabled={!write || isLoading}
         >
-          {isLoading ? "Swapping..." : "Swap"}
+          {isLoading ? 'Swapping...' : 'Swap'}
         </ButtonStyled>
       ) : (
         <ButtonStyled variant="contained" disabled={true}>

@@ -92,9 +92,12 @@ contract FinalPool {
     //////////////////////////////////////////////////////////////*/
 
     function mintLiquidity(uint256 amount) public payable {
-        if (msg.value != amount) {
+        if (msg.value != getETHSwapPrice(amount)) {
             revert MustProvideEqualLiquidity();
         }
+        token.transferFrom(msg.sender, address(this), amount);
+        (bool success, ) = msg.sender.call{value: amount}("");
+        require(success, "Transfer failed.");
     }
 
     /*//////////////////////////////////////////////////////////////
