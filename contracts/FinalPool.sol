@@ -95,7 +95,7 @@ contract FinalPool {
         if (msg.value != getETHSwapPrice(amount)) {
             revert MustProvideEqualLiquidity();
         }
-        token.transferFrom(msg.sender, address(this), amount); // need to work on this
+        token.transferFrom(msg.sender, address(this), amount); // need to work on this stuff
         (bool success, ) = msg.sender.call{value: amount}("");
         require(success, "Transfer failed.");
     }
